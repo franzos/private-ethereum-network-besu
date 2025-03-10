@@ -1,0 +1,11 @@
+{
+  "name": "smart-contract",
+  "version": "1.0.0",
+  "description": "Deploy a smart contract",
+  "author": "Franz Geffke <m@f-a.nz>",
+  "packageManager": "pnpm@10.4.1",
+  "dependencies": {
+    "solc": "^0.7",
+    "viem": "^2.23.9"
+  }
+}

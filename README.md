@@ -418,6 +418,63 @@ NODE_ENDPOINT=http://127.0.0.1:8546 docker-compose -f docker-compose.yml -f chai
 
 You can access the Chainlens UI at [http://localhost:80](http://localhost:80).
 
+## Smart Contract
+
+Next, let's deploy a smart contract; We're following an example from the besu documentation, with minor changes.
+
+### Deploy
+
+Start a new environment:
+
+```bash
+# You may use npm instead of pnpm
+guix node pnpm
+cd smart-contract
+pnpm install
+```
+
+Compile the contract:
+
+```bash
+node compile.js
+```
+
+Get the bytecode:
+
+```bash
+pnpm exec solcjs StorageExample.sol --bin --abi
+```
+
+Submit the contract:
+
+```bash
+$ node public_tx.js
+Creating transaction...
+Signing transaction...
+Sending transaction...
+tx transactionHash: 0x77d1c0fcbb77bf8212d83ea7061330227f9aaeac8cec276379cc701bae87fd63
+tx contractAddress: 0x4d2d24899c0b115a1fce8637fca610fe02f1909e
+```
+
+If you setup Chainlens previously, you should be able to see the contract now.
+
+### Interact
+
+Now, let's interact with the contract:
+
+```bash
+node query_contract.js
+```
+
+This will:
+
+1. Read the current value
+2. Fetch all past events
+3. Set a new value
+4. Read the new value
+
+![contract](smart-contract/chainlens-contract.png)
+
 ## Credits
 
 This guide is based on [Create a private network using QBFT](https://besu.hyperledger.org/private-networks/tutorials/qbft)
