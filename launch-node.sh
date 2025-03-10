@@ -4,12 +4,21 @@ set -e
 
 if [ -z "$1" ]; then
   echo "Error: Please provide a node name (e.g., node-2)"
-  echo "Usage: $0 node-name"
+  echo "Usage: $0 node-name [rpc-http-host [http-api-params]]"
+  echo "  - node-name: Required. The name of the node to launch."
+  echo "  - rpc-http-host: Optional. Default is 127.0.0.1"
+  echo "  - http-api-params: Optional. Default is ETH,NET,QBFT,WEB3"
   exit 1
 fi
 
 NODE_NAME="$1"
 NODE_DIR="network/${NODE_NAME}"
+
+# Set default RPC host to 127.0.0.1 if not specified
+RPC_HOST="${2:-127.0.0.1}"
+
+# Set default API parameters if not specified
+API_PARAMS="${3:-ETH,NET,QBFT,WEB3}"
 
 if [ "$NODE_NAME" = "node-1" ]; then
   echo "Error: This script is not meant for node-1, which should be launched separately as the bootnode"
@@ -38,12 +47,16 @@ BOOTNODE="enode://${BOOTNODE_KEY}@127.0.0.1:${BOOTNODE_P2P_PORT}"
 
 echo "Launching ${NODE_NAME} with p2p port ${P2P_PORT} and http port ${HTTP_PORT}"
 echo "Using bootnode: ${BOOTNODE}"
+echo "Using RPC HTTP host: ${RPC_HOST}"
+echo "Using HTTP API parameters: ${API_PARAMS}"
 
+# https://besu.hyperledger.org/24.7.0/public-networks/reference/cli/options#rpc-http-api
 guix shell openjdk -- ./besu/bin/besu \
   --data-path="${NODE_DIR}/data" \
   --genesis-file="${NODE_DIR}/genesis.json" \
   --rpc-http-enabled \
-  --rpc-http-api=ETH,NET,QBFT \
+  --rpc-http-host="${RPC_HOST}" \
+  --rpc-http-api="${API_PARAMS}" \
   --host-allowlist="*" \
   --rpc-http-cors-origins="all" \
   --bootnodes="${BOOTNODE}" \

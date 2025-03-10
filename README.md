@@ -191,7 +191,7 @@ guix shell openjdk -- ../../besu/bin/besu --data-path=data --genesis-file=genesi
 or use the provided script, each line in a new terminal:
 
 ```bash
-bash launch-node.sh node-2
+bash launch-node.sh node-2 127.0.0.1 ETH,NET,QBFT,WEB3,TRACE,DEBUG,ADMIN
 bash launch-node.sh node-3
 bash launch-node.sh node-4
 bash launch-node.sh node-5
@@ -271,6 +271,152 @@ Repeat this for the second account, and make a transfer between them; It should 
 ```bash
 2025-03-09 10:34:21.019+00:00 | BftProcessorExecutor-QBFT-0 | INFO  | QbftBesuControllerBuilder | Imported empty block #571 / 0 tx / 1 pending / 0 (0.0%) gas / (0xcde78d11808b554e55d83f843f3a160b0f413f2ad382ee6a5c9730956bacde88)
 ```
+
+## Indexing with TrueBlocks
+
+Do this in a seperate directory [ref](https://trueblocks.io/docs/install/install-core/):
+
+```bash
+guix shell git cmake make gcc-toolchain ninja curl python jq go
+git clone --depth 1 --no-single-branch --recurse-submodules --branch v4.2.0 https://github.com/TrueBlocks/trueblocks-core
+cd trueblocks-core
+mkdir build && cd build
+../scripts/go-work-sync.sh
+cmake ../src
+make
+```
+
+I don't like to pollute my paths, so I just set it for the current shell:
+
+```bash
+export PATH="/home/franz/git/trueblocks-core/bin:$PATH"
+```
+
+Run the application once, to generate the config:
+
+```bash
+chifra config --paths
+```
+
+Next, edit the config
+
+```bash
+$ nvim ~/.config/trueBlocks.toml
+```
+
+1. Look for section `[chains.mainnet]`
+2. Set `chainId = "1337"`
+2. Set `rpcProvider = "http://localhost:8546"`
+
+**Currently fails with a panic**: [issue](https://github.com/TrueBlocks/trueblocks-core/issues/3973).
+
+## Indexing with Chainlens
+
+```bash
+git clone https://github.com/web3labs/chainlens-free
+cd chainlens-free/docker-compose
+```
+
+Because of how I have this setup, I made some changes to the `docker-compose.yml`, to run with host networking:
+
+```yml
+version: "3.6"
+services:
+  api:
+    image: web3labs/epirus-free-api:latest
+    environment:
+      - NODE_ENDPOINT=${NODE_ENDPOINT}
+      - MONGO_CLIENT_URI=mongodb://127.0.0.1:27017
+      - REINDEX_ENDPOINT=http://ingestion/reindex/
+      - MONGO_DB_NAME=epirus
+      - MONGO_CREATE_INDICES=true
+      - REDIS_HOST=127.0.0.1
+      - REDIS_PORT=6379
+    depends_on:
+      - redis 
+      - mongodb
+    network_mode: "host"
+  
+  mongodb:
+    image: mongo:5.0.8
+    environment:
+      - COMPOSE_HTTP_TIMEOUT=900
+      - DOCKER_CLIENT_TIMEOUT=900
+    entrypoint: mongod --bind_ip "127.0.0.1"
+    network_mode: "host"
+
+  redis:
+    image: redis
+    restart: unless-stopped
+    container_name: redis
+    network_mode: "host"
+
+  web:
+    image: web3labs/epirus-free-web:latest
+    environment:
+      - API_URL=/api
+      - WS_API_URL=ws://localhost:8090
+      - DISPLAY_NETWORK_TAB=disabled
+    depends_on:
+      - api
+    network_mode: "host"
+  
+  ingestion:
+    image: web3labs/epirus-free-ingestion:latest
+    environment:
+      - NODE_ENDPOINT=${NODE_ENDPOINT}
+      - MONGO_CLIENT_URI=mongodb://127.0.0.1:27017
+      - MONGO_DB_NAME=epirus
+      - LIST_OF_METRICS_TO_CALCULATE_PER_MINUTE=hourly,daily,monthly,yearly
+    depends_on:
+      - mongodb
+      - redis
+    network_mode: "host"
+      
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./5xx.html:/www/error_pages/5xx.html
+    depends_on:
+      - api
+      - web
+    network_mode: "host"
+```
+
+as well as the `nginx.conf` config:
+
+```nginx
+events { }
+
+http {
+  server {
+    listen 80;
+    charset utf-8;
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:8090/;
+    }
+
+    location / {
+      proxy_pass http://127.0.0.1:3000/;
+    }
+
+    error_page 500 502 503 504 /5xx.html;
+    location /5xx.html {
+      root /www/error_pages/;
+    } 
+  }
+}
+```
+
+Start Docker:
+
+```bash
+NODE_ENDPOINT=http://127.0.0.1:8546 docker-compose -f docker-compose.yml -f chainlens-extensions/docker-compose-quorum-dev-quickstart.yml up
+```
+
+You can access the Chainlens UI at [http://localhost:80](http://localhost:80).
 
 ## Credits
 
