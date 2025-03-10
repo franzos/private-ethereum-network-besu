@@ -2,25 +2,23 @@
 
 Instructions on how-to setup (and interact with) a private Ethereum network with proof of authority (QBFT) consensus algorithm using Besu.
 
-This is guide is using Besu `25.2.2` but may work with other versions.
-
-## Setup Besu
+### Setup Besu
 
 ```bash
 wget https://github.com/hyperledger/besu/releases/download/25.2.2/besu-25.2.2.zip
 unzip besu-25.2.2.zip && mv besu-25.2.2 besu
 ```
 
-Start a guix environment, and check if besu is running:
+Setup a guix environment, and check if besu is working:
 
 ```bash
 guix shell openjdk
 ./besu/bin/besu --version
 ```
 
-## Configure the network
+### Configure the network
 
-Create a genesis config `qbftConfigFile.json`:
+Create a genesis config `qbftConfigFile.json`. This file is already provided in the repository; Adjust it to your liking:
 
 ```json
 {
@@ -70,6 +68,7 @@ Create a genesis config `qbftConfigFile.json`:
 There's a couple of things to be aware:
 
 - The `grayGlacierBlock` is the latest Ethereum milestone block. Replace it with whatever milestone to start with; Usually it's best to stick to the latest from [here](https://besu.hyperledger.org/23.7.2/public-networks/reference/genesis-items#milestone-blocks).
+- Blockhain nodes count: The minimum is currently 5 + bootnode
 
 Create the file structure for nodes:
 
@@ -80,7 +79,7 @@ mkdir -p network/node-1/data network/node-2/data network/node-3/data network/nod
 Generate the keys for the nodes:
 
 ```bash
-./besu/bin/besu operator generate-blockchain-config --config-file=qbftConfigFile.json --to=networkFiles --private-key-file-name=key
+$ ./besu/bin/besu operator generate-blockchain-config --config-file=qbftConfigFile.json --to=networkFiles --private-key-file-name=key
 
 # Result
 $ tree networkFiles/
@@ -111,7 +110,7 @@ networkFiles/
 Move the keys and genesis.json to the respective node directories:
 
 ```bash
-bash move-generated-files.sh
+$ bash move-generated-files.sh
 
 # Result
 $ tree network/
@@ -162,9 +161,9 @@ network/
 13 directories, 30 files
 ```
 
-## Start the network
+### Start the network
 
-### Bootnode
+#### Bootnode
 
 Now you can start the first node, in a new terminal:
 
@@ -179,7 +178,7 @@ Optionally, from the output, record the encode URL; For ex.:
 2025-03-09 09:52:05.176+00:00 | main | INFO  | DefaultP2PNetwork | Enode URL enode://3b88135adbbeb081ec04c1ba403d6675af6200f031dfbc72c725adb0c3f5021cfbaca654798da6e59b0cfdb8c94b55b0fd83d0c895616dbb3de23d89f4597c5a@127.0.0.1:30303
 ```
 
-### Nodes
+#### Nodes
 
 Now to start the second node, in a new terminal:
 
@@ -251,7 +250,7 @@ Result
 {"jsonrpc":"2.0","id":1,"result":"0x57"}
 ```
 
-## Wallet
+### Wallet
 
 To play with the network on Metamask, add it as "Custom Network" with the following details:
 
@@ -272,7 +271,7 @@ Repeat this for the second account, and make a transfer between them; It should 
 2025-03-09 10:34:21.019+00:00 | BftProcessorExecutor-QBFT-0 | INFO  | QbftBesuControllerBuilder | Imported empty block #571 / 0 tx / 1 pending / 0 (0.0%) gas / (0xcde78d11808b554e55d83f843f3a160b0f413f2ad382ee6a5c9730956bacde88)
 ```
 
-## Indexing with TrueBlocks
+### Indexing with TrueBlocks
 
 Do this in a seperate directory [ref](https://trueblocks.io/docs/install/install-core/):
 
@@ -308,9 +307,76 @@ $ nvim ~/.config/trueBlocks.toml
 2. Set `chainId = "1337"`
 2. Set `rpcProvider = "http://localhost:8546"`
 
-**Currently fails with a panic**: [issue](https://github.com/TrueBlocks/trueblocks-core/issues/3973).
+#### Usage
 
-## Indexing with Chainlens
+Note: The `TB_NO_PROVIDER_CHECK=true` is necessary, because of a failing check. I discuss this in the issue [here](https://github.com/TrueBlocks/trueblocks-core/issues/3973).
+
+Query a block:
+
+```bash
+$ TB_NO_PROVIDER_CHECK=true chifra blocks 23021
+INFO[10-03|15:00:33.965] Skipping rpcProvider check
+WARN[10-03|15:00:33.973] the --calldata value provided (manifestHashMap(0x0, "mainnet-ts")) was not found: abi not found for manifestHashMap(0x0, "mainnet-ts"): abi not found
+{
+  "data": [
+    {
+      "baseFeePerGas": 0,
+      "blockNumber": 23021,
+      "date": "2025-03-10 11:47:03 UTC",
+      "difficulty": 1,
+      "gasLimit": 4700000,
+      "gasUsed": 25009,
+      "hash": "0x8daeb989f85f23faf4dd605cfb50fcb1adb7e569074713f0b3c2a3e6945796fb",
+      "miner": "0xf7b6f5857b179f705277bb489164d0921b94eb7e",
+      "parentHash": "0x7a79fda98accab9876ebfd424b5603f6933b57944a9a32bc086e3605c50a6899",
+      "timestamp": 1741607223,
+      "transactions": [
+        {
+          "blockHash": "0x8daeb989f85f23faf4dd605cfb50fcb1adb7e569074713f0b3c2a3e6945796fb",
+          "blockNumber": 23021,
+          "date": "2025-03-10 11:47:03 UTC",
+          "ether": "0",
+          "from": "0xf17f52151ebef6c7334fad080c5704d77216b732",
+          "gas": 25096,
+          "gasCost": 30010800,
+          "gasPrice": 1200,
+          "gasUsed": 25009,
+          "hash": "0xf5bb5c29a62e39f09911f81eb7e93097f5ac8d304c995908736e4b17777bd8c7",
+          "input": "0x60fe47b10000000000000000000000000000000000000000000000000000000000000064",
+          "nonce": 3,
+          "receipt": {
+            "contractAddress": "0x0",
+            "effectiveGasPrice": 1200,
+            "gasUsed": 25009,
+            "logs": [
+              {
+                "address": "0x4d2d24899c0b115a1fce8637fca610fe02f1909e",
+                "data": "0x000000000000000000000000f17f52151ebef6c7334fad080c5704d77216b7320000000000000000000000000000000000000000000000000000000000000064",
+                "date": "2025-03-10 11:47:03 UTC",
+                "logIndex": 0,
+                "timestamp": 1741607223,
+                "topics": [
+                  "0xc9db20adedc6cf2b5d25252b101ab03e124902a73fcb12b753f3d1aaa2d8f9f5"
+                ]
+              }
+            ],
+            "status": null
+          },
+          "timestamp": 1741607223,
+          "to": "0x4d2d24899c0b115a1fce8637fca610fe02f1909e",
+          "traces": [],
+          "transactionIndex": 0,
+          "value": "0"
+        }
+      ],
+      "uncles": [],
+      "withdrawals": []
+    }
+  ]
+}
+```
+
+### Indexing with Chainlens
 
 ```bash
 git clone https://github.com/web3labs/chainlens-free
@@ -418,11 +484,11 @@ NODE_ENDPOINT=http://127.0.0.1:8546 docker-compose -f docker-compose.yml -f chai
 
 You can access the Chainlens UI at [http://localhost:80](http://localhost:80).
 
-## Smart Contract
+### Smart Contract
 
 Next, let's deploy a smart contract; We're following an example from the besu documentation, with minor changes.
 
-### Deploy
+#### Deploy
 
 Start a new environment:
 
@@ -458,7 +524,7 @@ tx contractAddress: 0x4d2d24899c0b115a1fce8637fca610fe02f1909e
 
 If you setup Chainlens previously, you should be able to see the contract now.
 
-### Interact
+#### Interact
 
 Now, let's interact with the contract:
 
@@ -475,6 +541,6 @@ This will:
 
 ![contract](smart-contract/chainlens-contract.png)
 
-## Credits
+### Credits
 
 This guide is based on [Create a private network using QBFT](https://besu.hyperledger.org/private-networks/tutorials/qbft)
