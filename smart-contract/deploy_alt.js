@@ -3,6 +3,7 @@ const path = require('path');
 const Web3 = require('web3');
 const chain = require('../smart-contract-common/besu_chain.js');
 const private = require('../smart-contract-common/private_client.js');
+const constant = require('./constant.js');
 
 const web3 = new Web3.Web3(chain.rpcUrls.default.http[0]);
 const account = web3.eth.accounts.privateKeyToAccount(private.privateKey);
@@ -10,7 +11,7 @@ web3.eth.accounts.wallet.add(account);
 
 async function deployContract() {
   try {
-    const contractJsonPath = path.resolve(__dirname, "StorageExample.json");
+    const contractJsonPath = path.resolve(__dirname, `${constant.contractName}.json`);
     const contractJson = JSON.parse(fs.readFileSync(contractJsonPath, 'utf8'));
     const contractBin = contractJson.bytecode.replace('0x', '');
     const contractConstructorInit = "000000000000000000000000000000000000000000000000000000000000002F";
