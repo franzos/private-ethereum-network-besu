@@ -1,0 +1,16 @@
+{
+  "accounts": [
+    {
+      "name": "account 1",
+      "balance": "0xad78ebc5ac6200000"
+    },
+    {
+      "name": "account 2",
+      "balance": "90000000000000000000000"
+    },
+    {
+      "name": "account 3",
+      "balance": "90000000000000000000000"
+    }
+  ]
+}

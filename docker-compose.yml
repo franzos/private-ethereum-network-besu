@@ -23,7 +23,6 @@ services:
       --p2p-port=30303
       --rpc-http-port=8545
       --rpc-http-host=0.0.0.0
-      --network-id 1337
 
   node-2:
     image: hyperledger/besu:25.3.0
@@ -54,7 +53,6 @@ services:
       --p2p-port=30304
       --rpc-http-port=8546
       --rpc-http-host=0.0.0.0
-      --network-id 1337
 
   node-3:
     image: hyperledger/besu:25.3.0
@@ -86,7 +84,6 @@ services:
       --p2p-port=30305
       --rpc-http-port=8547
       --rpc-http-host=0.0.0.0
-      --network-id 1337
 
   node-4:
     image: hyperledger/besu:25.3.0
@@ -118,7 +115,6 @@ services:
       --p2p-port=30306
       --rpc-http-port=8548
       --rpc-http-host=0.0.0.0
-      --network-id 1337
 
   node-5:
     image: hyperledger/besu:25.3.0
@@ -150,7 +146,6 @@ services:
       --p2p-port=30307
       --rpc-http-port=8549
       --rpc-http-host=0.0.0.0
-      --network-id 1337
 
   node-6:
     image: hyperledger/besu:25.3.0
@@ -182,7 +177,6 @@ services:
       --p2p-port=30308
       --rpc-http-port=8550
       --rpc-http-host=0.0.0.0
-      --network-id 1337
 
 # docker network create shared_network
 networks:
