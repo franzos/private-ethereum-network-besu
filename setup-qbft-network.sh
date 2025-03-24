@@ -2,7 +2,7 @@ set -e
 
 echo "=== QBFT Network Setup ==="
 echo "Step 1: Creating network directories..."
-mkdir -p network/node-1/data network/node-2/data network/node-3/data network/node-4/data network/node-5/data network/node-6/data
+mkdir -p network/node-1/data network/node-2/data network/node-3/data network/node-4/data network/node-5/data network/node-6/data network/node-7/data
 
 echo "Step 2: Generating temporary network configuration..."
 rm -rf tempNetworkFiles 2>/dev/null || true

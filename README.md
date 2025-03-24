@@ -71,12 +71,12 @@ Create a genesis config `qbftConfigFile.json`. This file is already provided in 
 There's a couple of things to be aware:
 
 - The `cancunBlock` is the latest Ethereum milestone block, but I've had trouble with it (RPC errors like `ChainId not supported`), and reverted to `londonBlock`. Replace it with whatever milestone to start with; Usually it's best to stick to the latest from [here](https://besu.hyperledger.org/23.7.2/public-networks/reference/genesis-items#milestone-blocks) or [here](https://github.com/ethereum/execution-specs#ethereum-protocol-releases).
-- Blockhain nodes count: The minimum is currently 5 + bootnode
+- Blockhain nodes count: 7 (2x redundancy)
 
 Create the file structure for nodes:
 
 ```bash
-mkdir -p network/node-1/data network/node-2/data network/node-3/data network/node-4/data network/node-5/data network/node-6/data
+mkdir -p network/node-1/data network/node-2/data network/node-3/data network/node-4/data network/node-5/data network/node-6/data network/node-7/data
 ```
 
 Generate the keys for the nodes:
@@ -198,6 +198,7 @@ bash launch-node.sh node-3
 bash launch-node.sh node-4
 bash launch-node.sh node-5
 bash launch-node.sh node-6
+bash launch-node.sh node-7
 ```
 
 You can verify all peers are online:
