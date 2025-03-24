@@ -6,6 +6,12 @@ if [ ! -f "validators.json" ]; then
   exit 1
 fi
 
+if [ ! -f "./besu/bin/besu" ]; then
+  echo "Error: Besu binary not found at ./besu/bin/besu"
+  echo "Please make sure Besu is installed correctly"
+  exit 1
+fi
+
 # Generate RLP-encoded extraData
 echo "Generating RLP-encoded extraData for QBFT..."
 rlp_encoded=$(./besu/bin/besu rlp encode --from=validators.json --type=QBFT_EXTRA_DATA 2>/dev/null)

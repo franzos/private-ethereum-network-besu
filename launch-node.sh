@@ -11,6 +11,12 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
+if [ ! -f "./besu/bin/besu" ]; then
+  echo "Error: Besu binary not found at ./besu/bin/besu"
+  echo "Please make sure Besu is installed correctly"
+  exit 1
+fi
+
 NODE_NAME="$1"
 NODE_DIR="network/${NODE_NAME}"
 
