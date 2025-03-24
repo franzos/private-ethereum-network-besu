@@ -5,3 +5,4 @@ node_modules
 contract_address
 transaction_hash
 *.json
+!package.json

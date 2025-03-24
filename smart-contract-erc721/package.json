@@ -1,0 +1,17 @@
+{
+  "name": "smart-contract-nft",
+  "version": "1.0.0",
+  "description": "Deploy an NFT smart contract",
+  "author": "Franz Geffke <m@f-a.nz>",
+  "packageManager": "pnpm@10.4.1",
+  "scripts": {
+    "compile": "node compile.js",
+    "deploy": "node deploy.js",
+    "query-tx": "node -e \"const fs=require('fs');const path=require('path');const queryTransactionStatus=require('../smart-contract-common/query_transaction.js');const txHash=fs.readFileSync(path.join(__dirname,'transaction_hash'),'utf8').trim();queryTransactionStatus(txHash).catch(console.error);\""
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4",
+    "solc": "0.8.19",
+    "viem": "^2.23"
+  }
+}
