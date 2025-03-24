@@ -29,6 +29,7 @@ BOOTNODE_P2P_PORT=$(cat "network/node-1/p2p-port")
 # Extract network ID from genesis.json
 NETWORK_ID=$(grep -o '"chainId" : [0-9]*' network/node-1/genesis.json | awk '{print $3}')
 
+# Set default currency values
 CURRENCY_NAME="Ether"
 CURRENCY_SYMBOL="ETH"
 CURRENCY_DECIMALS=18
@@ -44,7 +45,9 @@ NETWORK_ID=${NETWORK_ID}
 CURRENCY_NAME=${CURRENCY_NAME}
 CURRENCY_SYMBOL=${CURRENCY_SYMBOL}
 CURRENCY_DECIMALS=${CURRENCY_DECIMALS}
+DEFAULT_PRIVATE_KEY="0x..."
 EOF
 
 echo "Generated .env file for ${MODE} mode"
 echo "Bootnode enode URL: enode://${BOOTNODE_KEY}@${BOOTNODE_HOST}:${BOOTNODE_P2P_PORT}"
+echo "Make sure you set DEFAULT_PRIVATE_KEY in .env befoe publishing contracts"

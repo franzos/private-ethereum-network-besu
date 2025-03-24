@@ -24,6 +24,9 @@ rm -rf networkFiles 2>/dev/null || true
 echo "Step 7: Moving files to node directories..."
 bash move-generated-files.sh
 
+echo "Step 8: Genegerate .env for Docker"
+bash generate-env.sh
+
 echo "=== QBFT Network Setup Complete ==="
 echo "Your network is configured with the correct validator set in extraData"
 echo "You can now start your nodes using the launch-node.sh script"
