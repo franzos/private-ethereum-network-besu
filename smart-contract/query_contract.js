@@ -1,22 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const { createPublicClient, createWalletClient, http, parseAbi } = require('viem');
-const { privateKeyToAccount } = require('viem/accounts');
-const besuChain = require('./besu_chain.js');
-
-const host = 'http://localhost:8546';
-const privateKey = '0xae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f';
-const account = privateKeyToAccount(privateKey);
-
-const publicClient = createPublicClient({
-  transport: http(host)
-});
-
-const walletClient = createWalletClient({
-  transport: http(host),
-  chain: besuChain,
-  account
-});
+const { parseAbi } = require('viem');
+const publicClient = require('../smart-contract-common/public_client.js');
+const private = require('../smart-contract-common/private_client.js');
 
 let contractAddress;
 try {
@@ -69,7 +55,7 @@ async function updateStoredValue(newValue) {
   try {
     console.log(`Updating stored value to: ${newValue}`);
     
-    const hash = await walletClient.writeContract({
+    const hash = await private.walletClient.writeContract({
       address: contractAddress,
       abi: contractAbi,
       functionName: 'set',

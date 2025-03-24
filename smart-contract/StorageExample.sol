@@ -1,4 +1,6 @@
-pragma solidity ^0.7.0;
+// SPDX-License-Identifier: UNLICENSED
+// https://ethereum.stackexchange.com/questions/150281/invalid-opcode-opcode-0x5f-not-defined
+pragma solidity ^0.8.0;
 
 contract StorageExample {
   uint public storedData;

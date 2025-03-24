@@ -11,16 +11,41 @@ async function main() {
 function compile(sourceCode, contractName) {
   const input = {
     language: "Solidity",
-    sources: { main: { content: sourceCode } },
+    sources: { "StorageExample.sol": { content: sourceCode } },
     settings: { outputSelection: { "*": { "*": ["abi", "evm.bytecode"] } } },
   };
 
-  const output = solc.compile(JSON.stringify(input));
-  const artifact = JSON.parse(output).contracts.main[contractName];
+  const output = JSON.parse(solc.compile(JSON.stringify(input)));
+
+  if (output.errors) {
+    output.errors.forEach(err => {
+      const type = err.severity === "error" ? "Error" : "Warning";
+      console.error(`${type}: ${err.formattedMessage}`);
+    });
+    if (output.errors.some(err => err.severity === "error")) {
+      throw new Error("Compilation failed due to errors.");
+    }
+  }
+
+  if (!output.contracts || !output.contracts["StorageExample.sol"]) {
+    throw new Error("Compilation failed or contract not found in output.");
+  }
+
+  const artifact = output.contracts["StorageExample.sol"][contractName];
+  if (!artifact) {
+    throw new Error(`Contract ${contractName} not found in compiled output.`);
+  }
+
   return {
     abi: artifact.abi,
     bytecode: artifact.evm.bytecode.object,
   };
 }
 
-main().then(() => process.exit(0));
+main().catch(error => {
+  console.error("Unhandled error:", error);
+  process.exit(1);
+}).then(() => {
+  console.log(`Contract compiled and saved to StorageExample.json.`);
+  process.exit(0);
+});

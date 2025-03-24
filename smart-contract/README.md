@@ -1,6 +1,6 @@
 # Storage Example
 
-Simple smart contract compiled with solidity `0.7.x`.
+Simple smart contract compiled with solidity `0.8.x`.
 
 ## Credits
 

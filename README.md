@@ -12,7 +12,7 @@ unzip besu-25.2.2.zip && mv besu-25.2.2 besu
 Setup a guix environment, and check if besu is working:
 
 ```bash
-guix shell openjdk
+guix shell openjdk jq
 ./besu/bin/besu --version
 ```
 
@@ -25,7 +25,7 @@ Create a genesis config `qbftConfigFile.json`. This file is already provided in 
   "genesis": {
     "config": {
       "chainId": 1337,
-      "grayGlacierBlock": 0,
+      "londonBlock": 0,
       "qbft": {
         "blockperiodseconds": 2,
         "epochlength": 30000,
@@ -34,7 +34,7 @@ Create a genesis config `qbftConfigFile.json`. This file is already provided in 
     },
     "nonce": "0x0",
     "timestamp": "0x58ee40ba",
-    "gasLimit": "0x47b760",
+    "gasLimit": "0x1C9C380",
     "difficulty": "0x1",
     "mixHash": "0x63746963616c2062797a616e74696e65206661756c7420746f6c6572616e6365",
     "coinbase": "0x0000000000000000000000000000000000000000",
@@ -56,6 +56,9 @@ Create a genesis config `qbftConfigFile.json`. This file is already provided in 
       }
     }
   },
+  "number": "0x0",
+  "gasUsed": "0x0",
+  "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
   "blockchain": {
     "nodes": {
       "generate": true,
@@ -67,7 +70,7 @@ Create a genesis config `qbftConfigFile.json`. This file is already provided in 
 
 There's a couple of things to be aware:
 
-- The `grayGlacierBlock` is the latest Ethereum milestone block. Replace it with whatever milestone to start with; Usually it's best to stick to the latest from [here](https://besu.hyperledger.org/23.7.2/public-networks/reference/genesis-items#milestone-blocks).
+- The `cancunBlock` is the latest Ethereum milestone block, but I've had trouble with it (RPC errors like `ChainId not supported`), and reverted to `londonBlock`. Replace it with whatever milestone to start with; Usually it's best to stick to the latest from [here](https://besu.hyperledger.org/23.7.2/public-networks/reference/genesis-items#milestone-blocks) or [here](https://github.com/ethereum/execution-specs#ethereum-protocol-releases).
 - Blockhain nodes count: The minimum is currently 5 + bootnode
 
 Create the file structure for nodes:
@@ -505,16 +508,10 @@ Compile the contract:
 node compile.js
 ```
 
-Get the bytecode:
-
-```bash
-pnpm exec solcjs StorageExample.sol --bin --abi
-```
-
 Submit the contract:
 
 ```bash
-$ node public_tx.js
+$ node deploy.js
 Creating transaction...
 Signing transaction...
 Sending transaction...
@@ -540,6 +537,8 @@ This will:
 4. Read the new value
 
 ![contract](smart-contract/chainlens-contract.png)
+
+This repository contains examples for a ERC20 and ERC721 and custom contract
 
 ### Credits
 

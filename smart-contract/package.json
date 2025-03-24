@@ -5,7 +5,10 @@
   "author": "Franz Geffke <m@f-a.nz>",
   "packageManager": "pnpm@10.4.1",
   "dependencies": {
-    "solc": "^0.7",
-    "viem": "^2.23.9"
+    "@ethereumjs/common": "^4",
+    "@ethereumjs/tx": "^5",
+    "solc": "0.8.19",
+    "viem": "^2.23",
+    "web3": "^4"
   }
 }
