@@ -2,14 +2,12 @@
   "name": "smart-contract-common",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "author": "Franz Geffke <m@f-a.nz>",
+  "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.4.1",
   "dependencies": {
     "dotenv": "^16.4.7",
     "solc": "0.8.19",

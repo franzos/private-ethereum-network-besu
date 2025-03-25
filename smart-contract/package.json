@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Deploy a smart contract",
   "author": "Franz Geffke <m@f-a.nz>",
-  "packageManager": "pnpm@10.4.1",
+  "license": "MIT",
   "scripts": {
     "compile": "node compile.js",
     "deploy": "node deploy.js",

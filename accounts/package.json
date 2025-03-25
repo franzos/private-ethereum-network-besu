@@ -2,14 +2,12 @@
   "name": "accounts",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "author": "Franz Geffke <m@f-a.nz>",
+  "license": "MIT",
   "scripts": {
     "generate": "node generate-accounts.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.6.3",
   "dependencies": {
     "viem": "^2.23.14"
   }
