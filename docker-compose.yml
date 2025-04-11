@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   node-1:
@@ -9,20 +9,11 @@ services:
       - ./network/node-1/genesis.json:/opt/besu/genesis.json
     networks:
       - shared_network
-    ports:
-      - "30303:30303/tcp"
-      - "30303:30303/udp"
-      - "8545:8545"
     command: >
       --data-path=/opt/besu/data
       --genesis-file=/opt/besu/genesis.json
-      --rpc-http-enabled
-      --rpc-http-api=ETH,NET,QBFT
       --host-allowlist="*"
-      --rpc-http-cors-origins="all"
       --p2p-port=30303
-      --rpc-http-port=8545
-      --rpc-http-host=0.0.0.0
 
   node-2:
     image: hyperledger/besu:25.3.0
@@ -35,8 +26,7 @@ services:
     networks:
       - shared_network
     ports:
-      - "30304:30304/tcp"
-      - "30304:30304/udp"
+      # RPC access
       - "8546:8546"
     env_file:
       - .env
@@ -65,25 +55,16 @@ services:
       - ./network/node-3/genesis.json:/opt/besu/genesis.json
     networks:
       - shared_network
-    ports:
-      - "30305:30305/tcp"
-      - "30305:30305/udp"
-      - "8547:8547"
     env_file:
       - .env
     command: >
       --data-path=/opt/besu/data
       --genesis-file=/opt/besu/genesis.json
-      --rpc-http-enabled
-      --rpc-http-api=ETH,NET,QBFT,WEB3
       --host-allowlist="*"
-      --rpc-http-cors-origins="all"
       --Xdns-enabled=true
       --Xdns-update-enabled=true
       --bootnodes=${BOOTNODE_ENODE}
       --p2p-port=30305
-      --rpc-http-port=8547
-      --rpc-http-host=0.0.0.0
 
   node-4:
     image: hyperledger/besu:25.3.0
@@ -96,25 +77,16 @@ services:
       - ./network/node-4/genesis.json:/opt/besu/genesis.json
     networks:
       - shared_network
-    ports:
-      - "30306:30306/tcp"
-      - "30306:30306/udp"
-      - "8548:8548"
     env_file:
       - .env
     command: >
       --data-path=/opt/besu/data
       --genesis-file=/opt/besu/genesis.json
-      --rpc-http-enabled
-      --rpc-http-api=ETH,NET,QBFT,WEB3
       --host-allowlist="*"
-      --rpc-http-cors-origins="all"
       --Xdns-enabled=true
       --Xdns-update-enabled=true
       --bootnodes=${BOOTNODE_ENODE}
       --p2p-port=30306
-      --rpc-http-port=8548
-      --rpc-http-host=0.0.0.0
 
   node-5:
     image: hyperledger/besu:25.3.0
@@ -127,25 +99,16 @@ services:
       - ./network/node-5/genesis.json:/opt/besu/genesis.json
     networks:
       - shared_network
-    ports:
-      - "30307:30307/tcp"
-      - "30307:30307/udp"
-      - "8549:8549"
     env_file:
       - .env
     command: >
       --data-path=/opt/besu/data
       --genesis-file=/opt/besu/genesis.json
-      --rpc-http-enabled
-      --rpc-http-api=ETH,NET,QBFT,WEB3
       --host-allowlist="*"
-      --rpc-http-cors-origins="all"
       --Xdns-enabled=true
       --Xdns-update-enabled=true
       --bootnodes=${BOOTNODE_ENODE}
       --p2p-port=30307
-      --rpc-http-port=8549
-      --rpc-http-host=0.0.0.0
 
   node-6:
     image: hyperledger/besu:25.3.0
@@ -158,56 +121,38 @@ services:
       - ./network/node-6/genesis.json:/opt/besu/genesis.json
     networks:
       - shared_network
-    ports:
-      - "30308:30308/tcp"
-      - "30308:30308/udp"
-      - "8550:8550"
     env_file:
       - .env
     command: >
       --data-path=/opt/besu/data
       --genesis-file=/opt/besu/genesis.json
-      --rpc-http-enabled
-      --rpc-http-api=ETH,NET,QBFT,WEB3
       --host-allowlist="*"
-      --rpc-http-cors-origins="all"
       --Xdns-enabled=true
       --Xdns-update-enabled=true
       --bootnodes=${BOOTNODE_ENODE}
       --p2p-port=30308
-      --rpc-http-port=8550
-      --rpc-http-host=0.0.0.0
 
   node-7:
     image: hyperledger/besu:25.3.0
     container_name: besu-node-7
     depends_on:
       - node-1
-      - node-5
+      - node-6
     volumes:
       - ./network/node-7/data:/opt/besu/data
       - ./network/node-7/genesis.json:/opt/besu/genesis.json
     networks:
       - shared_network
-    ports:
-      - "30309:30309/tcp"
-      - "30309:30309/udp"
-      - "8551:8551"
     env_file:
       - .env
     command: >
       --data-path=/opt/besu/data
       --genesis-file=/opt/besu/genesis.json
-      --rpc-http-enabled
-      --rpc-http-api=ETH,NET,QBFT,WEB3
       --host-allowlist="*"
-      --rpc-http-cors-origins="all"
       --Xdns-enabled=true
       --Xdns-update-enabled=true
       --bootnodes=${BOOTNODE_ENODE}
       --p2p-port=30309
-      --rpc-http-port=8551
-      --rpc-http-host=0.0.0.0
 
 # docker network create shared_network
 networks:
