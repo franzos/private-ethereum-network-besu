@@ -79,6 +79,15 @@ Create the file structure for nodes:
 mkdir -p network/node-1/data network/node-2/data network/node-3/data network/node-4/data network/node-5/data network/node-6/data network/node-7/data
 ```
 
+(Optional) Generate accounts:
+
+_This will replace the existing accounts in the `qbftConfigFile` genesis file._
+
+```bash
+# Read the instructions at accounts/README.md, or you'll get the default.
+cd accounts && pnpm install && pnpm run generate
+```
+
 Generate the keys for the nodes:
 
 ```bash

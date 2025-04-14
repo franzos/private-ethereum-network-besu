@@ -7,6 +7,7 @@ This directory contains scripts for generating Ethereum accounts for your privat
 Generate accounts with:
 
 ```bash
+pnpm install
 pnpm run generate
 ```
 

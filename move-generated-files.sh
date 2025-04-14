@@ -6,9 +6,9 @@ key_dirs=(networkFiles/keys/*)
 first_p2p_port=30303
 first_http_port=8545
 
-if [ ${#key_dirs[@]} -ne 4 ]; then
-  echo "Warning: Found ${#key_dirs[@]} key directories, but expected 4 nodes"
-fi
+# if [ ${#key_dirs[@]} -ne 4 ]; then
+#   echo "Warning: Found ${#key_dirs[@]} key directories, but expected 4 nodes"
+# fi
 
 for i in "${!key_dirs[@]}"; do
   node_num=$((i+1))
